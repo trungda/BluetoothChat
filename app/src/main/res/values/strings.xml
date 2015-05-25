@@ -1,6 +1,17 @@
 <resources>
     <string name="app_name">BluetoothChat</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="device_name"></string>
+    <string name="button_go">GO</string>
+
     <string name="action_settings">Settings</string>
+
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_all_tabs">AllTabsActivity</string>
+
+    <string name="title_section1">Broadcast</string>
+    <string name="title_section2">1 v.s. 1</string>
+    <string name="title_section3">Group</string>
+    <string name="title_section4">Settings</string>
+
 </resources>
