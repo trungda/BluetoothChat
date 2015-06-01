@@ -6,39 +6,6 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="global.com.bluetoothchat.MainActivity$PlaceholderFragment">
 
-
-    <RelativeLayout
-android:id="@+id/rl_layout"
-android:layout_width="fill_parent"
-android:layout_height="45dp"
-android:background="@color/material_blue_grey_800"
-android:gravity="center_vertical"
-android:layout_alignParentTop="true">
-
-
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Broadcast"
-    android:layout_centerInParent="true"
-    android:textColor="#ffffff"
-    android:textSize="20sp"
-    android:id="@+id/broadcast_title"/>
-
-<ImageView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/campus_info"
-    android:layout_centerVertical="true"
-    android:layout_alignParentRight="true"
-    android:layout_marginRight="15dp"
-    android:id="@+id/refresh"/>
-
-
-
-</RelativeLayout>
-
-
 <RelativeLayout
 android:id="@+id/rl_bottom"
 android:layout_width="fill_parent"
@@ -83,3 +50,7 @@ android:scrollbars="none"
 android:cacheColorHint="#0000"/>
 
     </RelativeLayout>
+    <TextView android:id="@+id/section_label" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
