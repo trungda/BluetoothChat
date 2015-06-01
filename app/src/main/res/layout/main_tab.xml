@@ -23,7 +23,7 @@
             android:scaleType="matrix"
             android:layout_gravity="bottom"
             android:layout_alignParentBottom="true"
-            android:src="@drawable/tab_bg" />
+            />
 
 
         <LinearLayout
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:scaleType="matrix"
                     android:clickable="true"
-                    android:src="@drawable/tab_broadcast_pressed" />
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:scaleType="matrix"
                     android:clickable="true"
-                    android:src="@drawable/tab_1_normal" />
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:scaleType="matrix"
                     android:clickable="true"
-                    android:src="@drawable/tab_group" />
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:scaleType="matrix"
                     android:clickable="true"
-                    android:src="@drawable/tab_settings" />
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -14,10 +14,6 @@
     <Button android:id="@+id/go_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-<<<<<<< HEAD
         android:onClick="login_in"
-
-=======
->>>>>>> 7820a4ce41b4b47de2812ec2562b6e9da2727e6e
         android:text="@string/button_go" />
 </LinearLayout>

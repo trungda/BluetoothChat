@@ -13,7 +13,7 @@
             android:id="@+id/tv_sendtime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/chat_text_date_style"/>
+            style=""/>
     </LinearLayout>
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/background_material_dark"
-            style="@style/chat_content_date_style"/>
+            style=""/>
         <TextView
             android:id="@+id/tv_username"
             android:layout_width="wrap_content"
@@ -42,6 +42,6 @@
             android:layout_below="@id/iv_userhead"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@id/tv_chatcontent"
-            style="@style/chat_text_name_style"/>
+            style=""/>
     </RelativeLayout>
 </LinearLayout>

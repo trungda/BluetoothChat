@@ -22,7 +22,6 @@
             android:background="@color/highlighted_text_material_dark"
             android:onClick="group_chat_back"
             android:text="back"
-            android:textColor="@color/blck"
             android:textSize="14sp" />
 
         <TextView
@@ -33,10 +32,6 @@
             android:textColor="#ffffff"
             android:textSize="20sp"
             android:id="@+id/broadcast_title"/>
-
-
-
-
     </RelativeLayout>
 
 
