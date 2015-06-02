@@ -34,6 +34,7 @@
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/btn_send"
             android:textSize="18sp"
+            android:inputType="text"
             />
 
     </RelativeLayout>
