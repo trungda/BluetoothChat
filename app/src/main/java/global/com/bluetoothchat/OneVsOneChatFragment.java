@@ -44,7 +44,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class OneVsOneChatFragment extends Fragment{
+public class OneVsOneChatFragment extends Fragment {
     private EditText contentEditText = null;
     private ListView chatListView = null;
     private List<ChatEntity> chatList = null;
@@ -52,28 +52,33 @@ public class OneVsOneChatFragment extends Fragment{
     private Button sendButton = null;
     private  View rootView;
 
+    public static OneVsOneChatFragment newInstance() {
+        OneVsOneChatFragment fragment = new OneVsOneChatFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_onevsonechat, container, false);
-
         contentEditText = (EditText) rootView.findViewById(R.id.et_sendmessage);
         sendButton = (Button) rootView.findViewById(R.id.btn_send);
-
         chatListView = (ListView) rootView.findViewById(R.id.listview);
-
         chatList = new ArrayList<ChatEntity>();
+
         ChatEntity chatEntity = null;
         for (int i = 0; i < 2; i++) {
             chatEntity = new ChatEntity();
             if (i % 2 == 0) {
                 chatEntity.setComeMsg(false);
                 chatEntity.setContent("Hello");
-                chatEntity.setChatTime("2012-09-20 15:12:32");
+                chatEntity.setDate("2012-09-20 15:12:32");
             } else {
                 chatEntity.setComeMsg(true);
                 chatEntity.setContent("Hello,nice to meet you!");
-                chatEntity.setChatTime("2012-09-20 15:13:32");
+                chatEntity.setDate("2012-09-20 15:13:32");
             }
             chatList.add(chatEntity);
         }
@@ -99,7 +104,7 @@ public class OneVsOneChatFragment extends Fragment{
 
     private void send() {
         ChatEntity chatEntity = new ChatEntity();
-        chatEntity.setChatTime("2012-09-20 15:16:34");
+        chatEntity.setDate("2012-09-20 15:16:34");
         chatEntity.setContent(contentEditText.getText().toString());
         chatEntity.setComeMsg(false);
         chatList.add(chatEntity);
@@ -171,7 +176,7 @@ public class OneVsOneChatFragment extends Fragment{
                 chatHolder = (ChatHolder) convertView.getTag();
             }
 
-            chatHolder.timeTextView.setText(chatList.get(position).getChatTime());
+            chatHolder.timeTextView.setText(chatList.get(position).getDate());
             chatHolder.contentTextView.setText(chatList.get(position).getContent());
             chatHolder.userImageView.setImageResource(chatList.get(position).getUserImage());
 
