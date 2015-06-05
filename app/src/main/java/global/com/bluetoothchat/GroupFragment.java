@@ -33,10 +33,7 @@ public class GroupFragment extends Fragment {
     private  View rootView;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_group_chat, container, false);
-
-
-
+        rootView = inflater.inflate(R.layout.fragment_group, container, false);
         return rootView;
     }
 }
