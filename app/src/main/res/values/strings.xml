@@ -14,4 +14,7 @@
     <string name="title_section3">Group</string>
     <string name="title_section4">Settings</string>
 
+    <string name="file_list_item1">happy</string>
+    <string name="file_list_item2">sad</string>
+
 </resources>
