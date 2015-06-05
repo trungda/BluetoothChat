@@ -125,7 +125,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0: return new BroadcastFragment();
-                case 1: return new OneVsOneChatFragment();
+                case 1: return new OneVsOneFragment();
                 case 2: return new GroupFragment();
                 case 3: return new SettingsFragment();
             }
