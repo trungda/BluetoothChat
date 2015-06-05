@@ -10,11 +10,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
@@ -128,7 +125,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0: return new BroadcastFragment();
-                case 1: return new OneVsOneFragment();
+                case 1: return new OneVsOneChatFragment();
                 case 2: return new GroupFragment();
                 case 3: return new SettingsFragment();
             }
