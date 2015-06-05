@@ -32,9 +32,17 @@ import java.util.Map;
  * Created by dinhanhtrung on 5/25/15.
  */
 public class BroadcastFragment extends Fragment {
-
-
     private  View rootView;
+
+    public static BroadcastFragment newInstance() {
+        BroadcastFragment fragment = new BroadcastFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public BroadcastFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
