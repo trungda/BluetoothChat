@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 
 public class LoginActivity extends ActionBarActivity {
@@ -15,8 +16,8 @@ public class LoginActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         Button goButton = (Button)findViewById(R.id.go_button);
+        TextView deviceName = (TextView)findViewById(R.id.device_name);
         goButton.setOnClickListener(
                 new View.OnClickListener() {
 

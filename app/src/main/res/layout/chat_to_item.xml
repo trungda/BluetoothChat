@@ -36,15 +36,9 @@
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/iv_user_image"
-            android:background="@drawable/to_bg"
-            android:gravity="left|center"
-            android:clickable="true"
-            android:focusable="true"
-            android:lineSpacingExtra="2dp"
-            android:textColor="#ff000000"
-            android:textSize="14sp" />
-
+            android:layout_gravity="center"
+            android:layout_margin="5dip"
+            android:background="@drawable/bubble_green"
+            android:paddingLeft="10dip" />
     </RelativeLayout>
 </LinearLayout>  

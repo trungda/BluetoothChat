@@ -1,26 +1,12 @@
 package global.com.bluetoothchat;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +37,7 @@ public class BroadcastFragment extends Fragment {
         ListView tv1 = (ListView) rootView.findViewById(R.id.listview);
 
 
-        SimpleAdapter adapter = new SimpleAdapter(getActivity(),getData(),R.layout.list2,
+        SimpleAdapter adapter = new SimpleAdapter(getActivity(),getData(),R.layout.broadcast_list,
                 new String[]{"title","info","img"},
                 new int[]{R.id.title,R.id.info,R.id.img});
 

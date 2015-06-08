@@ -3,6 +3,8 @@
     package="global.com.bluetoothchat" >
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
 
     <application
         android:allowBackup="true"
@@ -14,13 +16,14 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_all_tabs" >
+            android:name=".MainActivity" >
+        </activity>
+        <activity
+            android:name=".OneVsOneChatActivity" >
         </activity>
     </application>
 
