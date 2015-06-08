@@ -130,7 +130,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0: return BroadcastFragment.newInstance();
-                case 1: return OneVsOneChatFragment.newInstance();
+                case 1: return OneVsOneFragment.newInstance();
                 case 2: return GroupFragment.newInstance();
                 case 3: return SettingsFragment.newInstance();
             }
