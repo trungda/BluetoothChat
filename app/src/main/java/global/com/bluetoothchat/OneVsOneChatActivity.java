@@ -14,6 +14,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -43,7 +44,7 @@ public class OneVsOneChatActivity extends Activity{
     private clientThread clientConnectThread = null;
     private BluetoothSocket socket = null;
     private BluetoothDevice device = null;
-    private readThread mreadThread = null;;
+    private readThread mreadThread = null;
     private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
             .getDefaultAdapter();
 
@@ -135,7 +136,7 @@ public class OneVsOneChatActivity extends Activity{
     public synchronized void onResume() {
         super.onResume();
         if (OneVsOneFragment.isOpen) {
-            Toast.makeText(mContext, "", Toast.LENGTH_SHORT)
+            Toast.makeText(mContext, "123", Toast.LENGTH_SHORT)
                     .show();
         }
         if (OneVsOneFragment.serviceOrCilent == OneVsOneFragment.ServerOrClient.CLIENT) {
@@ -163,14 +164,16 @@ public class OneVsOneChatActivity extends Activity{
                 mserverSocket = mBluetoothAdapter
                         .listenUsingRfcommWithServiceRecord(
                                 PROTOCOL_SCHEME_RFCOMM,
-                                UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
+                                UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66"));
                 Message msg = new Message();
                 msg.obj = "chat...";
                 msg.what = 0;
                 LinkDetectedHandler.sendMessage(msg);
+                Log.v("dubug2", "2222");
+                socket =OneVsOneFragment.socket;
 
-
-                socket = mserverSocket.accept();
+                Log.v("dubug2", "1111111");
+                Log.v("dubug3", String.valueOf(socket.isConnected()));
 
                 Message msg2 = new Message();
                 String info = "failed33";
@@ -196,14 +199,21 @@ public class OneVsOneChatActivity extends Activity{
                 // socket =
                 // device.createRfcommSocketToServiceRecord(BluetoothProtocols.OBEX_OBJECT_PUSH_PROTOCOL_UUID);
                 socket = device.createRfcommSocketToServiceRecord(UUID
-                        .fromString("00001101-0000-1000-8000-00805F9B34FB"));
+                        .fromString("fa87c0d0-afac-11de-8a39-0800200c9a66"));
 
                 Message msg2 = new Message();
                 msg2.obj = OneVsOneFragment.BlueToothAddress.toString();
                 msg2.what = 0;
                 LinkDetectedHandler.sendMessage(msg2);
-
+                Log.v("dubug2", "1111111");
                 socket.connect();
+
+
+                Log.v("dubug5", "444444");
+
+
+                Log.v("dubug5", String.valueOf(socket.isConnected()));
+
 
                 Message msg = new Message();
                 msg.obj = "";
