@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,7 +13,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +24,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
-
+import java.util.UUID;
+import android.os.Looper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,9 +42,16 @@ public class OneVsOneFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    public static final String PROTOCOL_SCHEME_RFCOMM = "btspp";
     static enum ServerOrClient {
         NONE, SERVICE, CLIENT
     };
+
+    private BluetoothServerSocket mserverSocket = null;
+    private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
+            .getDefaultAdapter();
+    static BluetoothSocket socket = null;
+    private serverThread startServerThread = null;
 
     static String BlueToothAddress = "null";
     static ServerOrClient serviceOrCilent = ServerOrClient.NONE;
@@ -47,6 +60,7 @@ public class OneVsOneFragment extends Fragment {
     private ListView mListView;
     private ArrayList<MyDeviceItem> list;
     private Button searchButton;
+
     ListAdapter mAdapter;
     Context mContext;
     View rootView;
@@ -59,8 +73,6 @@ public class OneVsOneFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment OneVsOneFragment.
      */
     public static OneVsOneFragment newInstance() {
@@ -71,6 +83,8 @@ public class OneVsOneFragment extends Fragment {
     }
 
     public OneVsOneFragment() {
+
+
         // Required empty public constructor
     }
 
@@ -80,10 +94,18 @@ public class OneVsOneFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_one_vs_one, container, false);
         init();
+
+        startServerThread = new serverThread();
+        startServerThread.start();
+
         return rootView;
     }
 
     private void init() {
+
+
+
+
         mContext = getActivity();
 
         list = new ArrayList<MyDeviceItem>();
@@ -115,37 +137,44 @@ public class OneVsOneFragment extends Fragment {
             mListView.setSelection(list.size() - 1);
         }
 
-        searchButton = (Button) rootView.findViewById(R.id.startSearch);
-        searchButton.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                isBTOpen = mBtAdapter.isEnabled();
-                if (isBTOpen) {
-                    if (mBtAdapter.isDiscovering()) {
-                        mBtAdapter.cancelDiscovery();
-                    } else {
-                        list.clear();
-                        mAdapter.notifyDataSetChanged();
-                        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
-                        if (pairedDevices.size() > 0) {
-                            for (BluetoothDevice device : pairedDevices) {
-                                list.add(new MyDeviceItem(device.getName() + "\n"
-                                        + device.getAddress(), true));
+
+
+
+        searchButton = (Button) rootView.findViewById(R.id.startSearch);
+                searchButton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+
+
+
+                        isBTOpen = mBtAdapter.isEnabled();
+                        if (isBTOpen) {
+                            if (mBtAdapter.isDiscovering()) {
+                                mBtAdapter.cancelDiscovery();
+                            } else {
+                                list.clear();
                                 mAdapter.notifyDataSetChanged();
-                                mListView.setSelection(list.size() - 1);
+                                Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+                                if (pairedDevices.size() > 0) {
+                                    for (BluetoothDevice device : pairedDevices) {
+                                        list.add(new MyDeviceItem(device.getName() + "\n"
+                                                + device.getAddress(), true));
+                                        mAdapter.notifyDataSetChanged();
+                                        mListView.setSelection(list.size() - 1);
+                                    }
+                                }
+                                else {
+                                    list.add(new MyDeviceItem("No devices have been paired", true));
+                                    mAdapter.notifyDataSetChanged();
+                                    mListView.setSelection(list.size() - 1);
+                                }
+                                mBtAdapter.startDiscovery();
                             }
+                        } else {
+                            Toast.makeText(mContext, "Log: ", Toast.LENGTH_SHORT).show();
                         }
-                        else {
-                            list.add(new MyDeviceItem("No devices have been paired", true));
-                            mAdapter.notifyDataSetChanged();
-                            mListView.setSelection(list.size() - 1);
-                        }
-                        mBtAdapter.startDiscovery();
-                    }
-                } else {
-                    Toast.makeText(mContext, "Log: ", Toast.LENGTH_SHORT).show();
-                }
             }
         });
     }
@@ -255,4 +284,59 @@ public class OneVsOneFragment extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
+    private class serverThread extends Thread {
+        public void run() {
+            Looper.prepare();
+            try {
+
+                mserverSocket = mBluetoothAdapter
+                        .listenUsingRfcommWithServiceRecord(
+                                PROTOCOL_SCHEME_RFCOMM,
+                                UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66"));
+                socket = mserverSocket.accept();
+                Log.v("str","yao1111");
+                if(socket!=null)
+                {
+
+                    Log.v("str","yao");
+                    AlertDialog.Builder StopDialog = new AlertDialog.Builder(mContext);
+                    StopDialog.setPositiveButton("yes",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // TODO Auto-generated method stub
+
+
+                                    isBTOpen = mBtAdapter.isEnabled();
+                                    if (isBTOpen) {
+                                        Log.v("str","yao1");
+
+                                        //   mBtAdapter.cancelDiscovery();
+                                        serviceOrCilent = ServerOrClient.SERVICE;
+                                        Intent intent = new Intent();
+                                        intent.setClass(mContext, OneVsOneChatActivity.class);
+                                        startActivity(intent);
+                                    } else {
+                                        Toast.makeText(mContext, "Log: ", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+                            });
+                    StopDialog.setNegativeButton("no",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    BlueToothAddress = null;
+                                }
+                            });
+                    StopDialog.show();
+                }
+                else{
+                    Log.v("yao","yu");
+                }
+            } catch (Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+            Looper.loop();
+        }
+    }
 }
