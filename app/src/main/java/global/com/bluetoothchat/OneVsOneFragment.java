@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +23,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
@@ -48,13 +46,12 @@ public class OneVsOneFragment extends Fragment {
     };
 
     private BluetoothServerSocket mserverSocket = null;
-    private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
-            .getDefaultAdapter();
+    private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     static BluetoothSocket socket = null;
     private serverThread startServerThread = null;
 
     static String BlueToothAddress = "null";
-    static ServerOrClient serviceOrCilent = ServerOrClient.NONE;
+    static ServerOrClient serviceOrClient = ServerOrClient.NONE;
     static boolean isOpen = false;
 
     private ListView mListView;
@@ -83,8 +80,6 @@ public class OneVsOneFragment extends Fragment {
     }
 
     public OneVsOneFragment() {
-
-
         // Required empty public constructor
     }
 
@@ -102,10 +97,6 @@ public class OneVsOneFragment extends Fragment {
     }
 
     private void init() {
-
-
-
-
         mContext = getActivity();
 
         list = new ArrayList<MyDeviceItem>();
@@ -118,17 +109,14 @@ public class OneVsOneFragment extends Fragment {
         mListView.setOnItemClickListener(mDeviceClickListener);
 
         // Register for broadcasts when a device is discovered
-        IntentFilter discoveryFilter = new IntentFilter(
-                BluetoothDevice.ACTION_FOUND);
+        IntentFilter discoveryFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         mContext.registerReceiver(mReceiver, discoveryFilter);
 
         Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
-
         // If there are paired devices, add each one to the ArrayAdapter
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
-                list.add(new MyDeviceItem(device.getName() + "\n"
-                        + device.getAddress(), true));
+                list.add(new MyDeviceItem(device.getName() + "\n" + device.getAddress(), true));
                 mAdapter.notifyDataSetChanged();
                 mListView.setSelection(list.size() - 1);
             }
@@ -137,18 +125,11 @@ public class OneVsOneFragment extends Fragment {
             mListView.setSelection(list.size() - 1);
         }
 
-
-
-
-
         searchButton = (Button) rootView.findViewById(R.id.startSearch);
                 searchButton.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-
-
-
                         isBTOpen = mBtAdapter.isEnabled();
                         if (isBTOpen) {
                             if (mBtAdapter.isDiscovering()) {
@@ -195,8 +176,7 @@ public class OneVsOneFragment extends Fragment {
                             isBTOpen = mBtAdapter.isEnabled();
                             if (isBTOpen) {
                                 mBtAdapter.cancelDiscovery();
-                                searchButton.setText("no");
-                                serviceOrCilent = ServerOrClient.CLIENT;
+                                serviceOrClient = ServerOrClient.CLIENT;
                                 Intent intent = new Intent();
                                 intent.setClass(mContext, OneVsOneChatActivity.class);
                                 startActivity(intent);
@@ -288,7 +268,6 @@ public class OneVsOneFragment extends Fragment {
         public void run() {
             Looper.prepare();
             try {
-
                 mserverSocket = mBluetoothAdapter
                         .listenUsingRfcommWithServiceRecord(
                                 PROTOCOL_SCHEME_RFCOMM,
@@ -297,21 +276,17 @@ public class OneVsOneFragment extends Fragment {
                 Log.v("str","yao1111");
                 if(socket!=null)
                 {
-
                     Log.v("str","yao");
                     AlertDialog.Builder StopDialog = new AlertDialog.Builder(mContext);
                     StopDialog.setPositiveButton("yes",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     // TODO Auto-generated method stub
-
-
                                     isBTOpen = mBtAdapter.isEnabled();
                                     if (isBTOpen) {
                                         Log.v("str","yao1");
-
                                         //   mBtAdapter.cancelDiscovery();
-                                        serviceOrCilent = ServerOrClient.SERVICE;
+                                        serviceOrClient = ServerOrClient.SERVICE;
                                         Intent intent = new Intent();
                                         intent.setClass(mContext, OneVsOneChatActivity.class);
                                         startActivity(intent);
@@ -329,7 +304,7 @@ public class OneVsOneFragment extends Fragment {
                             });
                     StopDialog.show();
                 }
-                else{
+                else {
                     Log.v("yao","yu");
                 }
             } catch (Exception e) {
