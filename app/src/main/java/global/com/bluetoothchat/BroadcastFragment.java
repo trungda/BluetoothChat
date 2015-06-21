@@ -36,8 +36,7 @@ public class BroadcastFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_broadcast, container, false);
         ListView tv1 = (ListView) rootView.findViewById(R.id.listview);
 
-
-        SimpleAdapter adapter = new SimpleAdapter(getActivity(),getData(),R.layout.broadcast_list,
+        SimpleAdapter adapter = new SimpleAdapter(getActivity(),getData(), R.layout.broadcast_list,
                 new String[]{"title","info","img"},
                 new int[]{R.id.title,R.id.info,R.id.img});
 

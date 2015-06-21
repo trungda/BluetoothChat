@@ -8,7 +8,7 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/startService"
+
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" >
     </ListView>
@@ -21,5 +21,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:text="search" />
+
+
 
 </RelativeLayout>

@@ -14,6 +14,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -32,20 +33,18 @@ public class OneVsOneChatActivity extends Activity{
     ListAdapter mAdapter;
     Context mContext;
 
-    /* 123 */
     public static final String PROTOCOL_SCHEME_L2CAP = "btl2cap";
     public static final String PROTOCOL_SCHEME_RFCOMM = "btspp";
     public static final String PROTOCOL_SCHEME_BT_OBEX = "btgoep";
     public static final String PROTOCOL_SCHEME_TCP_OBEX = "tcpobex";
 
-    private BluetoothServerSocket mserverSocket = null;
-    private serverThread startServerThread = null;
-    private clientThread clientConnectThread = null;
+    private BluetoothServerSocket mServerSocket = null;
+    private ServerThread startServerThread = null;
+    private ClientThread clientConnectThread = null;
     private BluetoothSocket socket = null;
     private BluetoothDevice device = null;
-    private readThread mreadThread = null;;
-    private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
-            .getDefaultAdapter();
+    private ReadThread mReadThread = null;
+    private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,17 +87,16 @@ public class OneVsOneChatActivity extends Activity{
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                if (OneVsOneFragment.serviceOrCilent == OneVsOneFragment.ServerOrClient.CLIENT) {
+                if (OneVsOneFragment.serviceOrClient == OneVsOneFragment.ServerOrClient.CLIENT) {
                     shutdownClient();
-                } else if (OneVsOneFragment.serviceOrCilent == OneVsOneFragment.ServerOrClient.CLIENT) {
+                } else if (OneVsOneFragment.serviceOrClient == OneVsOneFragment.ServerOrClient.CLIENT) {
                     shutdownServer();
                 }
                 OneVsOneFragment.isOpen = false;
-                OneVsOneFragment.serviceOrCilent = OneVsOneFragment.ServerOrClient.NONE;
+                OneVsOneFragment.serviceOrClient = OneVsOneFragment.ServerOrClient.NONE;
                 shutdownClient();
                 shutdownServer();
                 OneVsOneChatActivity.this.finish();
-                Toast.makeText(mContext, "1334", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -124,7 +122,7 @@ public class OneVsOneChatActivity extends Activity{
     protected void onDestroy() {
         // TODO Auto-generated method stub
         OneVsOneFragment.isOpen = false;
-        OneVsOneFragment.serviceOrCilent = OneVsOneFragment.ServerOrClient.NONE;
+        OneVsOneFragment.serviceOrClient = OneVsOneFragment.ServerOrClient.NONE;
         shutdownClient();
         shutdownServer();
         this.finish();
@@ -135,90 +133,55 @@ public class OneVsOneChatActivity extends Activity{
     public synchronized void onResume() {
         super.onResume();
         if (OneVsOneFragment.isOpen) {
-            Toast.makeText(mContext, "", Toast.LENGTH_SHORT)
-                    .show();
+            // Toast.makeText(mContext, "123", Toast.LENGTH_SHORT).show();
         }
-        if (OneVsOneFragment.serviceOrCilent == OneVsOneFragment.ServerOrClient.CLIENT) {
+        if (OneVsOneFragment.serviceOrClient == OneVsOneFragment.ServerOrClient.CLIENT) {
             String address = OneVsOneFragment.BlueToothAddress;
             if (!address.equals("null")) {
                 device = mBluetoothAdapter.getRemoteDevice(address);
-                clientConnectThread = new clientThread();
+                clientConnectThread = new ClientThread();
                 clientConnectThread.start();
                 OneVsOneFragment.isOpen = true;
             } else {
                 Toast.makeText(mContext, "address is null!", Toast.LENGTH_SHORT).show();
             }
-        } else if (OneVsOneFragment.serviceOrCilent == OneVsOneFragment.ServerOrClient.SERVICE) {
-            startServerThread = new serverThread();
+        } else if (OneVsOneFragment.serviceOrClient == OneVsOneFragment.ServerOrClient.SERVICE) {
+            startServerThread = new ServerThread();
             startServerThread.start();
             OneVsOneFragment.isOpen = true;
         }
     }
 
-
-    private class serverThread extends Thread {
+    private class ServerThread extends Thread {
         public void run() {
             try {
-
-                mserverSocket = mBluetoothAdapter
+                mServerSocket = mBluetoothAdapter
                         .listenUsingRfcommWithServiceRecord(
                                 PROTOCOL_SCHEME_RFCOMM,
-                                UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
+                                UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66"));
                 Message msg = new Message();
-                msg.obj = "chat...";
-                msg.what = 0;
-                LinkDetectedHandler.sendMessage(msg);
-
-
-                socket = mserverSocket.accept();
-
-                Message msg2 = new Message();
-                String info = "failed33";
-                msg2.obj = info;
-                msg2.what = 0;
-                LinkDetectedHandler.sendMessage(msg2);
-
-
-                mreadThread = new readThread();
-                mreadThread.start();
+                socket =OneVsOneFragment.socket;
+                mReadThread = new ReadThread();
+                mReadThread.start();
             } catch (Exception e) {
-                // TODO: handle exception
                 e.printStackTrace();
             }
         }
     }
 
-
-    private class clientThread extends Thread {
+    private class ClientThread extends Thread {
         public void run() {
             try {
-
-                // socket =
-                // device.createRfcommSocketToServiceRecord(BluetoothProtocols.OBEX_OBJECT_PUSH_PROTOCOL_UUID);
                 socket = device.createRfcommSocketToServiceRecord(UUID
-                        .fromString("00001101-0000-1000-8000-00805F9B34FB"));
-
-                Message msg2 = new Message();
-                msg2.obj = OneVsOneFragment.BlueToothAddress.toString();
-                msg2.what = 0;
-                LinkDetectedHandler.sendMessage(msg2);
-
+                        .fromString("fa87c0d0-afac-11de-8a39-0800200c9a66"));
                 socket.connect();
-
-                Message msg = new Message();
-                msg.obj = "";
-                msg.what = 0;
-                LinkDetectedHandler.sendMessage(msg);
-
-
-                mreadThread = new readThread();
-                mreadThread.start();
+                mReadThread = new ReadThread();
+                mReadThread.start();
             } catch (Exception e) {
                 // TODO: handle exception
             }
         }
     }
-
 
     private void sendMessageHandle(String msg) {
         if (socket == null) {
@@ -238,7 +201,7 @@ public class OneVsOneChatActivity extends Activity{
     }
 
 
-    private class readThread extends Thread {
+    private class ReadThread extends Thread {
         public void run() {
             byte[] buffer = new byte[1024];
             int bytes;
@@ -282,18 +245,18 @@ public class OneVsOneChatActivity extends Activity{
                     startServerThread.interrupt();
                     startServerThread = null;
                 }
-                if (mreadThread != null) {
-                    mreadThread.interrupt();
-                    mreadThread = null;
+                if (mReadThread != null) {
+                    mReadThread.interrupt();
+                    mReadThread = null;
                 }
                 try {
                     if (socket != null) {
                         socket.close();
                         socket = null;
                     }
-                    if (mserverSocket != null) {
-                        mserverSocket.close();
-                        mserverSocket = null;
+                    if (mServerSocket != null) {
+                        mServerSocket.close();
+                        mServerSocket = null;
                     }
                 } catch (Exception e) {
                     // TODO: handle exception
@@ -310,9 +273,9 @@ public class OneVsOneChatActivity extends Activity{
                     clientConnectThread.interrupt();
                     clientConnectThread = null;
                 }
-                if (mreadThread != null) {
-                    mreadThread.interrupt();
-                    mreadThread = null;
+                if (mReadThread != null) {
+                    mReadThread.interrupt();
+                    mReadThread = null;
                 }
                 if (socket != null) {
                     try {
