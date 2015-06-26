@@ -14,7 +14,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -87,13 +86,13 @@ public class OneVsOneChatActivity extends Activity{
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                if (OneVsOneFragment.serviceOrClient == OneVsOneFragment.ServerOrClient.CLIENT) {
+                if (OneVsOneFragment.serverOrClient == OneVsOneFragment.ServerOrClient.CLIENT) {
                     shutdownClient();
-                } else if (OneVsOneFragment.serviceOrClient == OneVsOneFragment.ServerOrClient.CLIENT) {
+                } else if (OneVsOneFragment.serverOrClient == OneVsOneFragment.ServerOrClient.CLIENT) {
                     shutdownServer();
                 }
                 OneVsOneFragment.isOpen = false;
-                OneVsOneFragment.serviceOrClient = OneVsOneFragment.ServerOrClient.NONE;
+                OneVsOneFragment.serverOrClient = OneVsOneFragment.ServerOrClient.NONE;
                 shutdownClient();
                 shutdownServer();
                 OneVsOneChatActivity.this.finish();
@@ -122,7 +121,7 @@ public class OneVsOneChatActivity extends Activity{
     protected void onDestroy() {
         // TODO Auto-generated method stub
         OneVsOneFragment.isOpen = false;
-        OneVsOneFragment.serviceOrClient = OneVsOneFragment.ServerOrClient.NONE;
+        OneVsOneFragment.serverOrClient = OneVsOneFragment.ServerOrClient.NONE;
         shutdownClient();
         shutdownServer();
         this.finish();
@@ -135,7 +134,7 @@ public class OneVsOneChatActivity extends Activity{
         if (OneVsOneFragment.isOpen) {
             // Toast.makeText(mContext, "123", Toast.LENGTH_SHORT).show();
         }
-        if (OneVsOneFragment.serviceOrClient == OneVsOneFragment.ServerOrClient.CLIENT) {
+        if (OneVsOneFragment.serverOrClient == OneVsOneFragment.ServerOrClient.CLIENT) {
             String address = OneVsOneFragment.BlueToothAddress;
             if (!address.equals("null")) {
                 device = mBluetoothAdapter.getRemoteDevice(address);
@@ -145,7 +144,7 @@ public class OneVsOneChatActivity extends Activity{
             } else {
                 Toast.makeText(mContext, "address is null!", Toast.LENGTH_SHORT).show();
             }
-        } else if (OneVsOneFragment.serviceOrClient == OneVsOneFragment.ServerOrClient.SERVICE) {
+        } else if (OneVsOneFragment.serverOrClient == OneVsOneFragment.ServerOrClient.SERVICE) {
             startServerThread = new ServerThread();
             startServerThread.start();
             OneVsOneFragment.isOpen = true;
@@ -155,8 +154,7 @@ public class OneVsOneChatActivity extends Activity{
     private class ServerThread extends Thread {
         public void run() {
             try {
-                mServerSocket = mBluetoothAdapter
-                        .listenUsingRfcommWithServiceRecord(
+                mServerSocket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(
                                 PROTOCOL_SCHEME_RFCOMM,
                                 UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66"));
                 Message msg = new Message();
@@ -191,7 +189,6 @@ public class OneVsOneChatActivity extends Activity{
             OutputStream out = socket.getOutputStream();
             out.write(msg.getBytes());
         } catch (Exception e) {
-            // TODO: handle exception
         }
         if (socket != null) {
             list.add(new MyDeviceItem(msg, false));
@@ -199,7 +196,6 @@ public class OneVsOneChatActivity extends Activity{
         mAdapter.notifyDataSetChanged();
         mListView.setSelection(list.size() - 1);
     }
-
 
     private class ReadThread extends Thread {
         public void run() {
