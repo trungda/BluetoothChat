@@ -1,28 +1,33 @@
 package global.com.bluetoothchat;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-
+import android.widget.EditText;
 
 public class LoginActivity extends ActionBarActivity {
-
+    private BluetoothAdapter mBluetoothAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Button goButton = (Button)findViewById(R.id.go_button);
-        TextView deviceName = (TextView)findViewById(R.id.device_name);
+        final EditText deviceName = (EditText)findViewById(R.id.device_name);
         goButton.setOnClickListener(
                 new View.OnClickListener() {
-
                     @Override
                     public void onClick(View v) {
+                        String newDeviceName = deviceName.getText().toString();
+                        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                        Log.v("LOG", "localdevicename : "+ mBluetoothAdapter.getName()+" localdeviceAddress : " + mBluetoothAdapter.getAddress());
+                        mBluetoothAdapter.setName(newDeviceName);
+                        Log.v("LOG", "localdevicename : " + mBluetoothAdapter.getName() + " localdeviceAddress : " + mBluetoothAdapter.getAddress());
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                     }
