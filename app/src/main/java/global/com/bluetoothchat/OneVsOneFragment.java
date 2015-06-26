@@ -45,13 +45,13 @@ public class OneVsOneFragment extends Fragment {
         NONE, SERVICE, CLIENT
     };
 
-    private BluetoothServerSocket mserverSocket = null;
+    private BluetoothServerSocket mServerSocket = null;
     private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     static BluetoothSocket socket = null;
-    private serverThread startServerThread = null;
+    private ServerThread startServerThread = null;
 
     static String BlueToothAddress = "null";
-    static ServerOrClient serviceOrClient = ServerOrClient.NONE;
+    static ServerOrClient serverOrClient = ServerOrClient.NONE;
     static boolean isOpen = false;
 
     private ListView mListView;
@@ -64,7 +64,6 @@ public class OneVsOneFragment extends Fragment {
 
     private BluetoothAdapter mBtAdapter;
     boolean isBTOpen;
-
 
     /**
      * Use this factory method to create a new instance of
@@ -90,7 +89,7 @@ public class OneVsOneFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_one_vs_one, container, false);
         init();
 
-        startServerThread = new serverThread();
+        startServerThread = new ServerThread();
         startServerThread.start();
 
         return rootView;
@@ -176,7 +175,7 @@ public class OneVsOneFragment extends Fragment {
                             isBTOpen = mBtAdapter.isEnabled();
                             if (isBTOpen) {
                                 mBtAdapter.cancelDiscovery();
-                                serviceOrClient = ServerOrClient.CLIENT;
+                                serverOrClient = ServerOrClient.CLIENT;
                                 Intent intent = new Intent();
                                 intent.setClass(mContext, OneVsOneChatActivity.class);
                                 startActivity(intent);
@@ -264,19 +263,17 @@ public class OneVsOneFragment extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
-    private class serverThread extends Thread {
+    private class ServerThread extends Thread {
         public void run() {
             Looper.prepare();
             try {
-                mserverSocket = mBluetoothAdapter
-                        .listenUsingRfcommWithServiceRecord(
+                mServerSocket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(
                                 PROTOCOL_SCHEME_RFCOMM,
                                 UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66"));
-                socket = mserverSocket.accept();
-                Log.v("str","yao1111");
+                socket = mServerSocket.accept();
+
                 if(socket!=null)
                 {
-                    Log.v("str","yao");
                     AlertDialog.Builder StopDialog = new AlertDialog.Builder(mContext);
                     StopDialog.setPositiveButton("yes",
                             new DialogInterface.OnClickListener() {
@@ -284,16 +281,14 @@ public class OneVsOneFragment extends Fragment {
                                     // TODO Auto-generated method stub
                                     isBTOpen = mBtAdapter.isEnabled();
                                     if (isBTOpen) {
-                                        Log.v("str","yao1");
                                         //   mBtAdapter.cancelDiscovery();
-                                        serviceOrClient = ServerOrClient.SERVICE;
+                                        serverOrClient = ServerOrClient.SERVICE;
                                         Intent intent = new Intent();
                                         intent.setClass(mContext, OneVsOneChatActivity.class);
                                         startActivity(intent);
                                     } else {
                                         Toast.makeText(mContext, "Log: ", Toast.LENGTH_SHORT).show();
                                     }
-
                                 }
                             });
                     StopDialog.setNegativeButton("no",
