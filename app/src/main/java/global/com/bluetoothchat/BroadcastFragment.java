@@ -76,16 +76,23 @@ public class BroadcastFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_broadcast, container, false);
-
         init();
-
         return rootView;
     }
 
-    void init() {
+    @Override
+    public synchronized void onResume() {
+        super.onResume();
         mServerThread = new ServerThread();
         mServerThread.start();
+    }
 
+    @Override
+    public synchronized void onPause() {
+        super.onPause();
+    }
+
+    void init() {
         mContext = getActivity();
         send = (Button) rootView.findViewById(R.id.btn_send);
         msgContent = (EditText) rootView.findViewById(R.id.et_sendmessage);
@@ -101,17 +108,16 @@ public class BroadcastFragment extends Fragment {
         for (int i = 0; i < pairedDevices.size(); i ++) {
             mUuids.add(UUID.randomUUID());
         }
-        for (BluetoothDevice key : pairedDevices) {
-            Log.d("device", key.toString());
-        }
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
+                Log.d("clicked", String.valueOf(mSocketList.size()));
                 String content = msgContent.getText().toString();
                 for (int i = 0; i < mSocketList.size(); i++) {
                     if (content.length() > 0) {
+                        Log.d("device", mSocketList.get(i).toString());
                         sendMessageHandle(mSocketList.get(i), content);
                         msgContent.setText("");
                         msgContent.clearFocus();
@@ -155,7 +161,8 @@ public class BroadcastFragment extends Fragment {
 
                     mReadThread = new ReadThread();
                     mReadThread.start();
-                }catch(Exception e){
+                }catch(IOException e){
+                    Log.d("Exception", "done");
                     e.printStackTrace();
                 }
             }
