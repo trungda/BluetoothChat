@@ -59,8 +59,6 @@ public class BroadcastFragment extends Fragment {
     private ArrayList<String> mDeviceAddressees = new ArrayList<>();
     private Set<BluetoothDevice> pairedDevices;
 
-    private ArrayList<UUID> mUuids = new ArrayList<UUID>();
-
     public static BroadcastFragment newInstance() {
         BroadcastFragment fragment = new BroadcastFragment();
         Bundle args = new Bundle();
@@ -85,6 +83,13 @@ public class BroadcastFragment extends Fragment {
         super.onResume();
         mServerThread = new ServerThread();
         mServerThread.start();
+
+        for (BluetoothDevice device : pairedDevices) {
+            ClientThread newClientThread = new ClientThread(device,
+                    UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66"));
+            newClientThread.start();
+            mClientThread.add(newClientThread);
+        }
     }
 
     @Override
@@ -105,9 +110,6 @@ public class BroadcastFragment extends Fragment {
 
         BluetoothAdapter mBtAdapter = BluetoothAdapter.getDefaultAdapter();
         pairedDevices = mBtAdapter.getBondedDevices();
-        for (int i = 0; i < pairedDevices.size(); i ++) {
-            mUuids.add(UUID.randomUUID());
-        }
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,17 +153,20 @@ public class BroadcastFragment extends Fragment {
         BluetoothServerSocket mServerSocket = null;
 
         public void run() {
+            Log.d("device", "asdf");
             for (int i = 0; i < pairedDevices.size(); i++) {
                 try {
                     mServerSocket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(
-                            PROTOCOL_SCHEME_RFCOMM, mUuids.get(i));
+                            PROTOCOL_SCHEME_RFCOMM,
+                            UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66"));
+                    Log.d("serversocket", mServerSocket.toString());
                     mSocket = mServerSocket.accept();
                     mSocketList.add(mSocket);
                     mDeviceAddressees.add(mSocket.getRemoteDevice().getAddress());
-
+                    Log.d("message", mSocket.toString());
                     mReadThread = new ReadThread();
                     mReadThread.start();
-                }catch(IOException e){
+                } catch(IOException e){
                     Log.d("Exception", "done");
                     e.printStackTrace();
                 }
@@ -203,6 +208,7 @@ public class BroadcastFragment extends Fragment {
             // Make a connection to the BluetoothSocket
             try {
                 mmSocket.connect();
+                mSocketList.add(mmSocket);
                 mReadThread = new ReadThread();
                 mReadThread.start();
             }
