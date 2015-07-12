@@ -131,7 +131,6 @@ public class OneVsOneChatActivity extends Activity{
     @Override
     public synchronized void onResume() {
         super.onResume();
-        /*
         if (OneVsOneFragment.isOpen) {
             // Toast.makeText(mContext, "123", Toast.LENGTH_SHORT).show();
         }
@@ -150,7 +149,6 @@ public class OneVsOneChatActivity extends Activity{
             startServerThread.start();
             OneVsOneFragment.isOpen = true;
         }
-        */
     }
 
     private class ServerThread extends Thread {

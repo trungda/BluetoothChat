@@ -59,6 +59,8 @@ public class BroadcastFragment extends Fragment {
     private ArrayList<String> mDeviceAddressees = new ArrayList<>();
     private Set<BluetoothDevice> pairedDevices;
 
+    private String latestOutMess = null;
+
     public static BroadcastFragment newInstance() {
         BroadcastFragment fragment = new BroadcastFragment();
         Bundle args = new Bundle();
@@ -143,10 +145,13 @@ public class BroadcastFragment extends Fragment {
             // TODO: handle exception
         }
         if (socket != null) {
-            mMessageList.add(new MyDeviceItem(msg, false));
+            if (latestOutMess == null || msg != latestOutMess) {
+                mMessageList.add(new MyDeviceItem(msg, false));
+                mAdapter.notifyDataSetChanged();
+                mListView.setSelection(mMessageList.size() - 1);
+                latestOutMess = msg;
+            }
         }
-        mAdapter.notifyDataSetChanged();
-        mListView.setSelection(mMessageList.size() - 1);
     }
 
     private class ServerThread extends Thread {
@@ -266,11 +271,16 @@ public class BroadcastFragment extends Fragment {
         public void handleMessage(Message msg) {
             if (msg.what == 1) {
                 mMessageList.add(new MyDeviceItem((String) msg.obj, true));
+                mAdapter.notifyDataSetChanged();
+                mListView.setSelection(mMessageList.size() - 1);
             } else {
-                mMessageList.add(new MyDeviceItem((String) msg.obj, false));
+                if (latestOutMess != (String)msg.obj) {
+                    latestOutMess = (String)msg.obj;
+                    mMessageList.add(new MyDeviceItem(latestOutMess, false));
+                    mAdapter.notifyDataSetChanged();
+                    mListView.setSelection(mMessageList.size() - 1);
+                }
             }
-            mAdapter.notifyDataSetChanged();
-            mListView.setSelection(mMessageList.size() - 1);
         }
     };
 }
