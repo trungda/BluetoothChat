@@ -131,8 +131,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             switch (position) {
                 case 0: return BroadcastFragment.newInstance();
                 case 1: return OneVsOneFragment.newInstance();
-                case 2: return GroupFragment.newInstance();
-                case 3: return SettingsFragment.newInstance();
+                //case 2: return GroupFragment.newInstance();
+                case 2: return SettingsFragment.newInstance();
             }
 
             return null;
@@ -140,7 +140,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         @Override
         public int getCount() {
-            return 4;
+            return 3;
         }
 
         @Override
@@ -151,9 +151,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     return getString(R.string.title_section1).toUpperCase(l);
                 case 1:
                     return getString(R.string.title_section2).toUpperCase(l);
+                //case 2:
+                //    return getString(R.string.title_section3).toUpperCase(l);
                 case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
-                case 3:
                     return getString(R.string.title_section4).toUpperCase(l);
             }
             return null;
